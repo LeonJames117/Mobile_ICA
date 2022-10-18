@@ -9,6 +9,7 @@ color teal_700
 color white
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable running_guy
 id Game_Name
 id Option_Back_To_MM
 id Options_Button
