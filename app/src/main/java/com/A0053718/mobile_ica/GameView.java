@@ -1,6 +1,7 @@
 package com.A0053718.mobile_ica;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -30,9 +32,13 @@ public class GameView extends SurfaceView implements Runnable {
        public int Tile_XPos=0;
         public int Tile_YPos=0;
     }
-    int Tile_Width = 190;
-    int Tile_Height = 190;
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    int Screen_height = Resources.getSystem().getDisplayMetrics().heightPixels;
+    int Screen_width = Resources.getSystem().getDisplayMetrics().widthPixels;
+    int Tile_Width = Screen_width/5;
+    int Tile_Height = Screen_height/10;
     Vector<Tile> Grid = new Vector<Tile>(Grid_Rows*Grid_Columns);
+
     //Running Guy Variables
     boolean Is_Moving = true;
     Bitmap Running_Bitmap;
