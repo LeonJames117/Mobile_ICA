@@ -25,19 +25,20 @@ public class GameView extends SurfaceView implements Runnable {
     Thread GameThread;
     volatile boolean Playing = true;
     Canvas GV_Canvas;
-    int Grid_Rows = 10;
-    int Grid_Columns = 25;
+
+    //Grid Variables
+    int Grid_Rows = 5;
+    int Grid_Columns = 10;
     class Tile{
        public Rect Tile_Rect;
        public int Tile_XPos=0;
         public int Tile_YPos=0;
     }
     DisplayMetrics displayMetrics = new DisplayMetrics();
-    int Screen_height = Resources.getSystem().getDisplayMetrics().heightPixels;
-    int Screen_width = Resources.getSystem().getDisplayMetrics().widthPixels;
-    int Tile_Width = Screen_width/5;
-    int Tile_Height = Screen_height/10;
+    int Tile_Width;
+    int Tile_Height;
     Vector<Tile> Grid = new Vector<Tile>(Grid_Rows*Grid_Columns);
+    boolean Grid_Setup = false;
 
     //Running Guy Variables
     boolean Is_Moving = true;
@@ -61,21 +62,28 @@ public class GameView extends SurfaceView implements Runnable {
         GV_SurfaceHolder = getHolder();
         Running_Bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.run_guy);
         Running_Bitmap = Bitmap.createScaledBitmap(Running_Bitmap,Frame_W * Frame_Count,Frame_H,false);
-        Setup_Game();
+        //Setup_Game();
     }
 
-    public void Setup_Game()
+    public void Setup_Game(int Screen_H, int Screen_W)
     {
-        for (int r = 0; r < Grid_Rows;r++)
+        if(Grid_Setup == false)
         {
-            for (int c = 0; c < Grid_Columns;c++)
+            Tile_Width = Screen_W/Grid_Columns;
+            Tile_Height = Screen_H/Grid_Rows;
+            for (int r = 0; r < Grid_Rows+1;r++)
             {
-                Tile T = new Tile ();
-                T.Tile_Rect = new Rect (c*Tile_Width,r*Tile_Height,Tile_Height,Tile_Width);
-                Grid.add(T);
-                Log.d("GameView", "Tile Added to grid");
+                for (int c = 0; c < Grid_Columns+1;c++)
+                {
+                    Tile T = new Tile ();
+                    T.Tile_Rect = new Rect (c*Tile_Width,r*Tile_Height,Tile_Width,Tile_Height);
+                    Grid.add(T);
+                    Log.d("GameView", "Tile Added to grid");
+
+                }
             }
         }
+        //Grid_Setup=true;
     }
 
     @Override
@@ -128,6 +136,14 @@ public class GameView extends SurfaceView implements Runnable {
         if(GV_SurfaceHolder.getSurface().isValid())
         {
             GV_Canvas = GV_SurfaceHolder.lockCanvas();
+            if (Grid_Setup == false)
+            {
+                Setup_Game(getHeight(),getWidth());
+                Grid_Setup=true;
+                Log.d("GameView", "Gird Setup = "+ Grid_Setup);
+            }
+
+            Setup_Game(getHeight(),getWidth());
             GV_Canvas.drawColor(Color.WHITE);
             DrawLocation.set(RunGuy_XPos,RunGuy_YPos,RunGuy_XPos+Frame_W,RunGuy_YPos+Frame_H);
             manageCurrentFrame();
