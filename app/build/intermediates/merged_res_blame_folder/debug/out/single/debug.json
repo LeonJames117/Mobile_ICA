@@ -8,12 +8,12 @@
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-hdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xxxhdpi\\ic_launcher.webp"
+        "merged": "com.A0053718.mobile_ica.app-merged_res-25:/drawable_skeleton_face_left.png.flat",
+        "source": "com.A0053718.mobile_ica.app-main-27:/drawable/skeleton_face_left.png"
     },
     {
-        "merged": "com.A0053718.mobile_ica.app-merged_res-25:/drawable-v24_end_turn_button.png.flat",
-        "source": "com.A0053718.mobile_ica.app-main-27:/drawable-v24/end_turn_button.png"
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable_skeleton.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable\\skeleton.png"
     },
     {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\layout_activity_game.xml.flat",
@@ -44,22 +44,6 @@
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\layout\\activity_options_menu.xml"
     },
     {
-        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_ic_launcher_foreground.xml.flat",
-        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\ic_launcher_foreground.xml"
-    },
-    {
-        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xhdpi\\ic_launcher.webp"
-    },
-    {
-        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-hdpi\\ic_launcher.webp"
-    },
-    {
-        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\xml_data_extraction_rules.xml.flat",
-        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\xml\\data_extraction_rules.xml"
-    },
-    {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xxhdpi\\ic_launcher_round.webp"
     },
@@ -86,5 +70,45 @@
     {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_end_turn_button.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\end_turn_button.png"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable_player_idle.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable\\player_idle.png"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_player.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\player.png"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_player_idle.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\player_idle.png"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable_enemy_idle.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable\\enemy_idle.png"
     }
 ]

@@ -33,57 +33,68 @@ public class GameView extends SurfaceView implements Runnable  {
     Canvas GV_Canvas;
     int Screen_Height = 0;
     int Screen_Width = 0;
+    Grid_Utility Grid_Helper = new Grid_Utility();
 
-    //Debugging Variables
-    Rect Touch_Rect = new Rect(0,500,50,50);
-    //Entities
-    Player GV_Player = new Player();
-    Enemy GV_Enemy = new Enemy();
-
-    //Turn Variables
-    Turn_Handler GV_Turn_Handler = new Turn_Handler(GV_Player,GV_Enemy);
-    Drawable End_Turn_Drawable;
 
     //Grid Variables
     int Grid_Rows = 5;
     int Grid_Columns = 10;
-    class Tile{
-       public Rect Tile_Rect;
-       public int T_XPos=0;
-       public int T_YPos=0;
-       public int T_Column=0;
-       public int T_Row=0;
+    public static class Tile{
+        public Rect Tile_Rect;
+        public int T_XPos=0;
+        public int T_YPos=0;
+        public int T_Column=0;
+        public int T_Row=0;
     }
     int Tile_Width;
     int Tile_Height;
     Vector<Tile> Grid = new Vector<Tile>(Grid_Rows*Grid_Columns);
     boolean Grid_Setup = false;
 
-    //Running Guy Variables
+    //Entities
+    Player GV_Player = new Player();
+    Enemy GV_Enemy = new Enemy(Grid,Grid_Helper);
+
+
+
+    //Turn Variables
+    Turn_Handler GV_Turn_Handler = new Turn_Handler(GV_Player,GV_Enemy);
+    Drawable End_Turn_Drawable;
+
+
+
+    //Sprite Variables
     boolean Is_Moving = true;
-    Bitmap Running_Bitmap;
-
-    int Frame_W = 115;
-    int Frame_H = 137;
-    int Frame_Count = 8;
-    int RunGuy_XPos = 10;
-    int RunGuy_YPos = 10;
-    int CurrentFrame = 0;
-    private Rect Frame_To_Draw = new Rect(0,0,Frame_W,Frame_H);
-    private RectF DrawLocation = new RectF(RunGuy_XPos,RunGuy_YPos,RunGuy_XPos+Frame_W,Frame_H);
-    float lastFrameChangeTime = 0;
-    float frameLength_MS = 3;
-
-
+    Bitmap Player_Bitmap;
+    Bitmap Enemy_Bitmap;
+        //Player
+            int Player_Frame_W = 350;
+            int PLayer_Frame_H = 175;
+            int Player_Frame_Count = 9;
+            int CurrentFrame = 0;
+            private Rect Player_Frame_To_Draw = new Rect(0,0,Player_Frame_W,PLayer_Frame_H);
+            private RectF Player_DrawLocation = new RectF(GV_Player.XPos,GV_Player.YPos,GV_Player.XPos+Player_Frame_W,PLayer_Frame_H);
+            float lastFrameChangeTime = 10;
+            float frameLength_MS = 3;
+        //Enemy
+            Drawable Enemy_Drawable;
 
     public GameView(Context context) {
         super(context);
         GV_SurfaceHolder = getHolder();
         Resources Res = context.getResources();
-        Running_Bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.run_guy);
+
+        Player_Bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.player_idle);
+        Player_Bitmap = Bitmap.createScaledBitmap(Player_Bitmap,Player_Frame_W * Player_Frame_Count,PLayer_Frame_H,false);
+
+
+
         End_Turn_Drawable = ResourcesCompat.getDrawable(Res,R.drawable.end_turn_button,null);
         End_Turn_Drawable.setBounds(1500,725,1500+400,725+200);
-        Running_Bitmap = Bitmap.createScaledBitmap(Running_Bitmap,Frame_W * Frame_Count,Frame_H,false);
+
+        Enemy_Drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.skeleton_face_left,null);
+        Enemy_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
+        lastFrameChangeTime = 0;
 
     }
 
@@ -91,7 +102,6 @@ public class GameView extends SurfaceView implements Runnable  {
     {
         if(!Grid_Setup)
         {
-
             Tile_Width = Screen_W/Grid_Columns;
             Tile_Height = Screen_H/Grid_Rows;
             for (int r = 0; r < Grid_Rows+1;r++)
@@ -106,13 +116,11 @@ public class GameView extends SurfaceView implements Runnable  {
                     T.T_YPos = r*Tile_Height;
                     Grid.add(T);
                     Log.d("GameView", "Tile Added to grid");
-
                 }
             }
-
-
+            Tile Enemy_Spawn = Grid_Helper.Find_Tile(Grid,Grid_Columns-1,Grid_Rows/2);
+            GV_Enemy.Set_Location(Enemy_Spawn.T_XPos+40,Enemy_Spawn.T_YPos+35,Grid_Columns-1,Grid_Rows/2);
         }
-        //Grid_Setup=true;
     }
 
     @Override
@@ -125,6 +133,7 @@ public class GameView extends SurfaceView implements Runnable  {
         }
 
     }
+
     public void Pause(){
         Playing=false;
         try{
@@ -134,30 +143,37 @@ public class GameView extends SurfaceView implements Runnable  {
         }
 
     }
+
     public void Resume(){
         Playing=true;
         GameThread = new Thread(this);
         GameThread.start();
     }
 
+
+
     public void manageCurrentFrame()
     {
         long time = System.currentTimeMillis();
         if(Is_Moving)
         {
+            Log.d("Sprite", "Time: "+ time);
+            Log.d("Sprite", "Last Frame Change: "+ lastFrameChangeTime+frameLength_MS);
             if(time > lastFrameChangeTime+frameLength_MS)
             {
+                Log.d("Sprite", "Frame Change");
                 lastFrameChangeTime = time;
                 CurrentFrame++;
-                if (CurrentFrame>=Frame_Count)
+                if (CurrentFrame>=Player_Frame_Count)
                 {
                     //Reset frames to start
                     CurrentFrame = 0;
                 }
             }
         }
-        Frame_To_Draw.left = CurrentFrame * Frame_W;
-        Frame_To_Draw.right = Frame_To_Draw.left+Frame_W;
+        Log.d("Sprite", "Current Frame: " + CurrentFrame);
+        Player_Frame_To_Draw.left = CurrentFrame * Player_Frame_W;
+        Player_Frame_To_Draw.right = Player_Frame_To_Draw.left+Player_Frame_W;
     }
 
     public void draw()
@@ -174,9 +190,12 @@ public class GameView extends SurfaceView implements Runnable  {
             }
             Setup_Game(getHeight(),getWidth());
             GV_Canvas.drawColor(Color.WHITE);
-            DrawLocation.set(GV_Player.XPos,GV_Player.YPos,GV_Player.XPos+Frame_W,GV_Player.YPos+Frame_H);
+            Player_DrawLocation.set(GV_Player.XPos,GV_Player.YPos,GV_Player.XPos+Player_Frame_W,GV_Player.YPos+PLayer_Frame_H);
             manageCurrentFrame();
-            GV_Canvas.drawBitmap(Running_Bitmap,Frame_To_Draw,DrawLocation,null);
+            GV_Canvas.drawBitmap(Player_Bitmap,Player_Frame_To_Draw,Player_DrawLocation,null);
+            //GV_Canvas.drawBitmap(Enemy_Bitmap,Enemy_Frame_To_Draw,Enemy_DrawLocation,null);
+            Enemy_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
+            Enemy_Drawable.draw(GV_Canvas);
             Paint P = new Paint();
 
             P.setStrokeWidth(5);
@@ -200,13 +219,9 @@ public class GameView extends SurfaceView implements Runnable  {
         }
     }
 
-
-    private void update()
-    {
-      GV_Turn_Handler.Turn_Update();
+    private void update() {
+        GV_Turn_Handler.Turn_Update();
     }
-
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

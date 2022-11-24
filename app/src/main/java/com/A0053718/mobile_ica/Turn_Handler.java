@@ -40,6 +40,7 @@ public class Turn_Handler {
         if (Start_of_Player_Turn)
         {
             Player_Move_Allowed = true;
+            Player_Move_Complete = false;
             Start_of_Player_Turn = false;
             Log.d("Turn Handler", "Player Turn Started");
         }
@@ -60,7 +61,7 @@ public class Turn_Handler {
 
     public void Enemy_Turn()
     {
-        TH_Enemy.Enemy_Move();
+        TH_Enemy.Enemy_Move(TH_Player);
         End_Enemy_Turn();
     }
 
