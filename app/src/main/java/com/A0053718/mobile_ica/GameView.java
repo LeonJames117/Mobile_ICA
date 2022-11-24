@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,6 +18,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewDebug;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.sql.Struct;
 import java.util.Vector;
@@ -30,16 +33,17 @@ public class GameView extends SurfaceView implements Runnable  {
     Canvas GV_Canvas;
     int Screen_Height = 0;
     int Screen_Width = 0;
-    //Player Variables
-    int Player_Current_Row = 0;
-    int Player_Current_Column = 0;
+
+    //Debugging Variables
+    Rect Touch_Rect = new Rect(0,500,50,50);
+    //Entities
+    Player GV_Player = new Player();
+    Enemy GV_Enemy = new Enemy();
+
     //Turn Variables
-    boolean Player_Turn = true;
-    boolean Move_Complete = false;
-    boolean Move_Allowed = true;
-    boolean Display_End_Turn = false;
-    boolean Start_of_Turn = true;
-    Rect End_Turn;
+    Turn_Handler GV_Turn_Handler = new Turn_Handler(GV_Player,GV_Enemy);
+    Drawable End_Turn_Drawable;
+
     //Grid Variables
     int Grid_Rows = 5;
     int Grid_Columns = 10;
@@ -50,7 +54,6 @@ public class GameView extends SurfaceView implements Runnable  {
        public int T_Column=0;
        public int T_Row=0;
     }
-    DisplayMetrics displayMetrics = new DisplayMetrics();
     int Tile_Width;
     int Tile_Height;
     Vector<Tile> Grid = new Vector<Tile>(Grid_Rows*Grid_Columns);
@@ -59,13 +62,12 @@ public class GameView extends SurfaceView implements Runnable  {
     //Running Guy Variables
     boolean Is_Moving = true;
     Bitmap Running_Bitmap;
+
     int Frame_W = 115;
     int Frame_H = 137;
     int Frame_Count = 8;
     int RunGuy_XPos = 10;
     int RunGuy_YPos = 10;
-    int Run_Speed = 200;
-    int fps = 25;
     int CurrentFrame = 0;
     private Rect Frame_To_Draw = new Rect(0,0,Frame_W,Frame_H);
     private RectF DrawLocation = new RectF(RunGuy_XPos,RunGuy_YPos,RunGuy_XPos+Frame_W,Frame_H);
@@ -77,15 +79,17 @@ public class GameView extends SurfaceView implements Runnable  {
     public GameView(Context context) {
         super(context);
         GV_SurfaceHolder = getHolder();
+        Resources Res = context.getResources();
         Running_Bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.run_guy);
+        End_Turn_Drawable = ResourcesCompat.getDrawable(Res,R.drawable.end_turn_button,null);
+        End_Turn_Drawable.setBounds(1500,725,1500+400,725+200);
         Running_Bitmap = Bitmap.createScaledBitmap(Running_Bitmap,Frame_W * Frame_Count,Frame_H,false);
 
-        //Setup_Game();
     }
 
     public void Setup_Game(int Screen_H, int Screen_W)
     {
-        if(Grid_Setup == false)
+        if(!Grid_Setup)
         {
 
             Tile_Width = Screen_W/Grid_Columns;
@@ -106,7 +110,7 @@ public class GameView extends SurfaceView implements Runnable  {
                 }
             }
 
-            End_Turn = new Rect(1900,200,400,400);
+
         }
         //Grid_Setup=true;
     }
@@ -161,94 +165,92 @@ public class GameView extends SurfaceView implements Runnable  {
         if(GV_SurfaceHolder.getSurface().isValid())
         {
             GV_Canvas = GV_SurfaceHolder.lockCanvas();
-            if (Grid_Setup == false)
+            if (!Grid_Setup)
             {
                 Screen_Height = getHeight();
                 Screen_Width =  getWidth();
                 Setup_Game(getHeight(),getWidth());
-
                 Grid_Setup=true;
-
             }
-
             Setup_Game(getHeight(),getWidth());
             GV_Canvas.drawColor(Color.WHITE);
-            DrawLocation.set(RunGuy_XPos,RunGuy_YPos,RunGuy_XPos+Frame_W,RunGuy_YPos+Frame_H);
+            DrawLocation.set(GV_Player.XPos,GV_Player.YPos,GV_Player.XPos+Frame_W,GV_Player.YPos+Frame_H);
             manageCurrentFrame();
             GV_Canvas.drawBitmap(Running_Bitmap,Frame_To_Draw,DrawLocation,null);
             Paint P = new Paint();
-            P.setStyle(Paint.Style.STROKE);
-            P.setColor(Color.BLACK);
+
             P.setStrokeWidth(5);
-            if (Display_End_Turn)
-            {
-                GV_Canvas.drawRect(End_Turn,P);
-                Log.d("GameView", "End Turn Drawn");
-            }
+
             P.setColor(Color.RED);
+            P.setStyle(Paint.Style.STROKE);
+
             for (Tile T : Grid)
             {
                 GV_Canvas.drawRect(T.Tile_Rect,P);
             }
+
+            if (GV_Turn_Handler.Display_End_Turn)
+            {
+                P.setStyle(Paint.Style.FILL);
+                P.setColor(Color.BLACK);
+                End_Turn_Drawable.draw(GV_Canvas);
+            }
+
             GV_SurfaceHolder.unlockCanvasAndPost(GV_Canvas);
-            
         }
-
-
     }
 
 
     private void update()
     {
-      if (Player_Turn)
-      {
-          if (Start_of_Turn)
-          {
-              Move_Allowed = true;
-              Start_of_Turn = false;
-          }
-
-          if (Move_Complete)
-          {
-              Display_End_Turn=true;
-          }
-      }
+      GV_Turn_Handler.Turn_Update();
     }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (Move_Allowed) {
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN:
-                    int Touch_X = (int) event.getX();
-                    int Touch_Y = (int) event.getY();
-                    int Touch_Column = Touch_X / Tile_Width;
-                    int Touch_Row = Touch_Y / Tile_Height;
-                    Log.d("GameView", "Touch X = " + Touch_X);
-                    Log.d("GameView", "Touch Y = " + Touch_Y);
-                    Log.d("GameView", "Column = " + Touch_Column);
-                    Log.d("GameView", "Row = " + Touch_Row);
 
-                    if(Touch_Column > Player_Current_Column + 3 || Touch_Column < Player_Current_Column - 3  || Touch_Row > Player_Current_Row + 3 || Touch_Row < Player_Current_Row - 3)
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                int Touch_X = (int) event.getX();
+                int Touch_Y = (int) event.getY();
+
+            if(GV_Turn_Handler.Display_End_Turn && End_Turn_Drawable.getBounds().contains(Touch_X,Touch_Y))
+            {
+                GV_Turn_Handler.End_Player_Turn();
+                return true;
+            }
+
+            if (GV_Turn_Handler.Player_Move_Allowed)
+            {
+                int Touch_Column = Touch_X / Tile_Width;
+                int Touch_Row = Touch_Y / Tile_Height;
+
+                if(GV_Player.Tile_In_Range(Touch_Row,Touch_Column))
+                {
+                    Log.d("GameView", "Player Column: " + GV_Player.Current_Column);
+                    Log.d("GameView", "Player Row: " + GV_Player.Current_Row);
+                    Log.d("GameView", "Touch Column: " + Touch_Column);
+                    Log.d("GameView", "Touch Row: " + Touch_Row);
+                    Log.d("GameView", "Tile out of Range");
+                    return true;
+                }
+
+                for (Tile t : Grid) {
+                    if (t.T_Row == Touch_Row && t.T_Column == Touch_Column)
                     {
-                        Log.d("GameView", "Player Column = " + Player_Current_Column);
-                        Log.d("GameView", "Player Row = " + Player_Current_Row);
-                        Log.d("GameView", "Tile out of Range");
+                        GV_Player.Move_Player(t.T_XPos,t.T_YPos,Touch_Row,Touch_Column);
+                        GV_Turn_Handler.Player_Move_Complete = true;
+                        GV_Turn_Handler.Player_Move_Allowed = false;
                         return true;
                     }
-                    for (Tile t : Grid) {
-                        if (t.T_Row == Touch_Row && t.T_Column == Touch_Column) {
-                            RunGuy_XPos = t.T_XPos;
-                            RunGuy_YPos = t.T_YPos;
-                        }
-                    }
-                    Move_Complete = true;
-                    Move_Allowed = false;
-                    return true;
+                }
             }
-        }
-        else{
-            Log.d("GameView", "Movement not allowed");
+            else
+            {
+                Log.d("GameView", "Movement not allowed");
+            }
         }
         return super.onTouchEvent(event);
     }
