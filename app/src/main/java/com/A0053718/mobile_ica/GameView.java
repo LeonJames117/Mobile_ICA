@@ -21,6 +21,8 @@ import android.view.ViewDebug;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import org.w3c.dom.Text;
+
 import java.sql.Struct;
 import java.util.Vector;
 
@@ -77,7 +79,8 @@ public class GameView extends SurfaceView implements Runnable  {
             float lastFrameChangeTime = 10;
             float frameLength_MS = 3;
         //Enemy
-            Drawable Enemy_Drawable;
+            Drawable Enemy_Face_Left_Drawable;
+            Drawable Enemy_Face_Right_Drawable;
 
     public GameView(Context context) {
         super(context);
@@ -92,8 +95,10 @@ public class GameView extends SurfaceView implements Runnable  {
         End_Turn_Drawable = ResourcesCompat.getDrawable(Res,R.drawable.end_turn_button,null);
         End_Turn_Drawable.setBounds(1500,725,1500+400,725+200);
 
-        Enemy_Drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.skeleton_face_left,null);
-        Enemy_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
+        Enemy_Face_Left_Drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.skeleton_face_left,null);
+        Enemy_Face_Right_Drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.skeleton,null);
+        Enemy_Face_Left_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
+        Enemy_Face_Right_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
         lastFrameChangeTime = 0;
 
     }
@@ -119,7 +124,7 @@ public class GameView extends SurfaceView implements Runnable  {
                 }
             }
             Tile Enemy_Spawn = Grid_Helper.Find_Tile(Grid,Grid_Columns-1,Grid_Rows/2);
-            GV_Enemy.Set_Location(Enemy_Spawn.T_XPos+40,Enemy_Spawn.T_YPos+35,Grid_Columns-1,Grid_Rows/2);
+            GV_Enemy.Set_Location(Enemy_Spawn.T_XPos,Enemy_Spawn.T_YPos,Grid_Columns-1,Grid_Rows/2);
         }
     }
 
@@ -194,8 +199,18 @@ public class GameView extends SurfaceView implements Runnable  {
             manageCurrentFrame();
             GV_Canvas.drawBitmap(Player_Bitmap,Player_Frame_To_Draw,Player_DrawLocation,null);
             //GV_Canvas.drawBitmap(Enemy_Bitmap,Enemy_Frame_To_Draw,Enemy_DrawLocation,null);
-            Enemy_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
-            Enemy_Drawable.draw(GV_Canvas);
+
+            if(GV_Enemy.Facing_Right)
+            {
+                Enemy_Face_Right_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
+                Enemy_Face_Right_Drawable.draw(GV_Canvas);
+            }
+            else
+            {
+                Enemy_Face_Left_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
+                Enemy_Face_Left_Drawable.draw(GV_Canvas);
+            }
+
             Paint P = new Paint();
 
             P.setStrokeWidth(5);
@@ -241,8 +256,12 @@ public class GameView extends SurfaceView implements Runnable  {
             {
                 int Touch_Column = Touch_X / Tile_Width;
                 int Touch_Row = Touch_Y / Tile_Height;
-
-                if(GV_Player.Tile_In_Range(Touch_Row,Touch_Column))
+                if (Touch_Column == GV_Enemy.Current_Column && Touch_Row == GV_Enemy.Current_Row)
+                {
+                    Log.d("GameView", "You cannot move onto an enemy");
+                    return true;
+                }
+                if(Grid_Helper.Tile_In_Range(Touch_Row,Touch_Column,GV_Player.Current_Column,GV_Player.Current_Row,GV_Player.Move_Range))
                 {
                     Log.d("GameView", "Player Column: " + GV_Player.Current_Column);
                     Log.d("GameView", "Player Row: " + GV_Player.Current_Row);

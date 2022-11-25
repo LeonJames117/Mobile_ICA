@@ -12,7 +12,9 @@ public class Enemy {
     int Current_Column = 0;
     int Current_Row = 0;
     int Movement_Range = 2;
+    boolean Same_Column = false;
     int Health = 50;
+    boolean Facing_Right = false;
     Vector<GameView.Tile> Enemy_Grid;
     Grid_Utility Enemy_Grid_Help;
     Enemy(Vector<GameView.Tile> Grid, Grid_Utility GridUtil)
@@ -27,60 +29,91 @@ public class Enemy {
         int Target_Column = Current_Column;
         int Target_Row = Current_Row;
 
+
+
         //Check if already in correct column
         if(Current_Column != Player.Current_Column+1 || Current_Column != Player.Current_Column-1)
         {
             if (Player.Current_Column+1 < Current_Column)
-            {
+            {//Enemy right of player
                 Target_Column = Current_Column - Movement_Range;
                 if(Target_Column < Player.Current_Column+1)
                 {
                     Target_Column = Player.Current_Column+1;
                 }
+                Facing_Right=false;
             }
             if (Player.Current_Column-1 > Current_Column )
-            {
+            {//Enemy Left of player
                 Target_Column = Current_Column + Movement_Range;
-                if(Target_Column > Player.Current_Column+1)
+                if(Target_Column > Player.Current_Column-1)
                 {
                     Target_Column = Player.Current_Column-1;
                 }
-
+                Facing_Right=true;
+            }
+        }
+        else
+        {
+            if (Player.Current_Column+1 < Current_Column)
+            {//Enemy right of player
+                Facing_Right=false;
+            }
+            else
+            {//Enemy Left of player
+                Facing_Right=true;
             }
         }
 
         if(Current_Row != Player.Current_Row)
         {
-            if (Player.Current_Row < Current_Row)
+            if (Player.Current_Column == Current_Column)
             {
-                Target_Row = Current_Row - Movement_Range;
-                if(Target_Row < Player.Current_Row)
-                {
-                    Target_Row = Player.Current_Row;
-                }
+                Same_Column = true;
+            }
+            else
+            {
+                Same_Column = false;
+            }
+            if (Player.Current_Row < Current_Row)
+            { // Enemy above player
+
+
+                    if (Player.Current_Column == Current_Column)
+                    {
+                        Target_Row = Player.Current_Row+1;
+                    }
+                    else
+                    {
+                        Target_Row = Player.Current_Row;
+                    }
+
             }
             if (Player.Current_Row > Current_Row )
-            {
-                Target_Row = Current_Row + Movement_Range;
-                if(Target_Row > Player.Current_Row)
+            {  //Enemy bellow player
+
+                if (Player.Current_Column == Current_Column)
+                {
+                    Target_Row = Player.Current_Row-1;
+                }
+                else
                 {
                     Target_Row = Player.Current_Row;
                 }
 
             }
 
-            GameView.Tile Target_Tile = Enemy_Grid_Help.Find_Tile(Enemy_Grid,Target_Column,Target_Row);
-            Set_Location(Target_Tile.T_XPos,Target_Tile.T_YPos,Target_Column,Target_Row);
         }
 
-
+        GameView.Tile Target_Tile = Enemy_Grid_Help.Find_Tile(Enemy_Grid,Target_Column,Target_Row);
+        Set_Location(Target_Tile.T_XPos,Target_Tile.T_YPos,Target_Column,Target_Row);
 
     }
 
     public void Set_Location(int New_X, int New_Y, int New_Column, int New_Row)
     {
-        XPos = New_X;
-        YPos = New_Y;
+        XPos = New_X + 40;
+        YPos = New_Y + 35;
         Current_Row = New_Row;
         Current_Column = New_Column;
     }

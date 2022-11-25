@@ -17,4 +17,9 @@ public class Grid_Utility {
         GameView.Tile Fail = new GameView.Tile();
         return Fail ;
     }
+
+    public boolean Tile_In_Range(int Tile_Row, int Tile_Column, int Current_Column, int Current_Row, int Move_Range)
+    {
+        return (Tile_Column > Current_Column + Move_Range || Tile_Column < Current_Column - Move_Range  || Tile_Row > Current_Row + Move_Range || Tile_Row < Current_Row - Move_Range);
+    }
 }
