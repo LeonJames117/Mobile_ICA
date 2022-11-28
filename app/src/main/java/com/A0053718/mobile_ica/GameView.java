@@ -198,7 +198,6 @@ public class GameView extends SurfaceView implements Runnable  {
             Player_DrawLocation.set(GV_Player.XPos,GV_Player.YPos,GV_Player.XPos+Player_Frame_W,GV_Player.YPos+PLayer_Frame_H);
             manageCurrentFrame();
             GV_Canvas.drawBitmap(Player_Bitmap,Player_Frame_To_Draw,Player_DrawLocation,null);
-            //GV_Canvas.drawBitmap(Enemy_Bitmap,Enemy_Frame_To_Draw,Enemy_DrawLocation,null);
 
             if(GV_Enemy.Facing_Right)
             {
@@ -217,7 +216,6 @@ public class GameView extends SurfaceView implements Runnable  {
 
             P.setColor(Color.RED);
             P.setStyle(Paint.Style.STROKE);
-
             for (Tile T : Grid)
             {
                 GV_Canvas.drawRect(T.Tile_Rect,P);
@@ -225,8 +223,6 @@ public class GameView extends SurfaceView implements Runnable  {
 
             if (GV_Turn_Handler.Display_End_Turn)
             {
-                P.setStyle(Paint.Style.FILL);
-                P.setColor(Color.BLACK);
                 End_Turn_Drawable.draw(GV_Canvas);
             }
 

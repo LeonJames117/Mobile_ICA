@@ -42,7 +42,7 @@ public class Turn_Handler {
             Player_Move_Allowed = true;
             Player_Move_Complete = false;
             Start_of_Player_Turn = false;
-            Log.d("Turn Handler", "Player Turn Started");
+            Log.d("Game", "Player Turn Started");
         }
 
         if (Player_Move_Complete)
@@ -56,12 +56,13 @@ public class Turn_Handler {
         Is_Player_Turn = false;
         Is_Enemy_Turn = true;
         Display_End_Turn=false;
-        Log.d("Turn Handler", "Player Turn Ended");
+        Log.d("Game", "Player Turn Ended");
     }
 
     public void Enemy_Turn()
     {
         TH_Enemy.Enemy_Move(TH_Player);
+        TH_Enemy.Enemy_Attack(TH_Player);
         End_Enemy_Turn();
     }
 
@@ -70,7 +71,7 @@ public class Turn_Handler {
         Is_Player_Turn = true;
         Start_of_Player_Turn = true;
         Is_Enemy_Turn = false;
-        Log.d("Turn Handler", "Enemy Turn Ended");
+        Log.d("Game", "Enemy Turn Ended");
     }
 
 }

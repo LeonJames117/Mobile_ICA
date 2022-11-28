@@ -12,6 +12,8 @@ public class Enemy {
     int Current_Column = 0;
     int Current_Row = 0;
     int Movement_Range = 2;
+    int Attack_Range = 1;
+    int Attack_Power = 10;
     boolean Same_Column = false;
     int Health = 50;
     boolean Facing_Right = false;
@@ -117,4 +119,16 @@ public class Enemy {
         Current_Row = New_Row;
         Current_Column = New_Column;
     }
+
+    public void Enemy_Attack(Player Target)
+    {
+        if(!Enemy_Grid_Help.Tile_In_Range(Target.Current_Row, Target.Current_Column, Current_Column,Current_Row,Attack_Range))
+        {
+            Target.Health = Target.Health-Attack_Power;
+            Log.d("Game", "Enemy Attacked");
+            Log.d("Game", "Player Health: " + Target.Health);
+        }
+    }
+
+
 }
