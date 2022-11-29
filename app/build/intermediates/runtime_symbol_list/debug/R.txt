@@ -2436,6 +2436,7 @@ int drawable abc_textfield_search_material 0x7f070054
 int drawable abc_vector_test 0x7f070055
 int drawable avd_hide_password 0x7f070056
 int drawable avd_show_password 0x7f070057
+int drawable background 0x7f0700a5
 int drawable btn_checkbox_checked_mtrl 0x7f070058
 int drawable btn_checkbox_checked_to_unchecked_mtrl_animation 0x7f070059
 int drawable btn_checkbox_unchecked_mtrl 0x7f07005a
@@ -2449,6 +2450,12 @@ int drawable design_ic_visibility 0x7f070061
 int drawable design_ic_visibility_off 0x7f070062
 int drawable design_password_eye 0x7f070063
 int drawable design_snackbar_background 0x7f070064
+int drawable dice_1 0x7f0700a6
+int drawable dice_2 0x7f0700a7
+int drawable dice_3 0x7f0700a8
+int drawable dice_4 0x7f0700a9
+int drawable dice_5 0x7f0700aa
+int drawable dice_6 0x7f0700ab
 int drawable end_turn_button 0x7f07009f
 int drawable ic_clock_black_24dp 0x7f070065
 int drawable ic_keyboard_black_24dp 0x7f070066

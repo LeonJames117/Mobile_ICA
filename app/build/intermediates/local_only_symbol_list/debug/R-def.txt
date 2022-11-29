@@ -7,6 +7,13 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable background
+drawable dice_1
+drawable dice_2
+drawable dice_3
+drawable dice_4
+drawable dice_5
+drawable dice_6
 drawable end_turn_button
 drawable ic_launcher_background
 drawable ic_launcher_foreground

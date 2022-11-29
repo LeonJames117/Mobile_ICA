@@ -1,6 +1,5 @@
 package com.A0053718.mobile_ica;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,19 +10,18 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewDebug;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import org.w3c.dom.Text;
-
-import java.sql.Struct;
 import java.util.Vector;
 
 public class GameView extends SurfaceView implements Runnable  {
@@ -35,10 +33,61 @@ public class GameView extends SurfaceView implements Runnable  {
     Canvas GV_Canvas;
     int Screen_Height = 0;
     int Screen_Width = 0;
-    Grid_Utility Grid_Helper = new Grid_Utility();
+    Drawable Background;
+
+    //Sensor Variables
+    float Sense_X;
+    float Sense_Y;
+    float Previous_Sense_X = 0;
+    float Change_in_Sense=0;
+    float Sense_Z;
+    SensorEventListener GV_Sense_Listener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent)
+        {
+            Sense_X = sensorEvent.values[0];
+            Sense_Y = sensorEvent.values[1];
+            Change_in_Sense = Sense_X - Previous_Sense_X;
+            Sense_Z = sensorEvent.values[2];
+            Previous_Sense_X = Sense_X;
+
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+
+        }
+    };
+
+    //Dice
+        Boolean Display_Dice = false;
+        Boolean Dice_Display_Finished = false;
+        int Frames_Displayed = 0;
+        int Number_To_Draw = 1;
+        Drawable Dice_1;
+        Drawable Dice_2;
+        Drawable Dice_3;
+        Drawable Dice_4;
+        Drawable Dice_5;
+        Drawable Dice_6;
+        public int Start_Dice_Roll()
+        {
+            if (Change_in_Sense > 0.8)
+            {
+                double Roll = Math.random()*(6-1+1)+1;
+
+                Display_Dice = true;
+                Dice_Display_Finished = false;
+
+                return (int)Roll;
+            }
+
+
+        }
 
 
     //Grid Variables
+    Grid_Utility Grid_Helper = new Grid_Utility();
     int Grid_Rows = 5;
     int Grid_Columns = 10;
     public static class Tile{
@@ -54,7 +103,7 @@ public class GameView extends SurfaceView implements Runnable  {
     boolean Grid_Setup = false;
 
     //Entities
-    Player GV_Player = new Player();
+    Player GV_Player = new Player(this);
     Enemy GV_Enemy = new Enemy(Grid,Grid_Helper);
 
 
@@ -87,10 +136,34 @@ public class GameView extends SurfaceView implements Runnable  {
         GV_SurfaceHolder = getHolder();
         Resources Res = context.getResources();
 
+        SensorManager GV_Sense_Manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
+        if(GV_Sense_Manager.getSensorList(Sensor.TYPE_ACCELEROMETER).size() > 0)
+        {
+            Sensor Accel = GV_Sense_Manager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
+            if(!GV_Sense_Manager.registerListener(GV_Sense_Listener,Accel,SensorManager.SENSOR_DELAY_GAME))
+            {
+                Log.d("Sensor", "Listener not Registered");
+            }
+        }
+
         Player_Bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.player_idle);
         Player_Bitmap = Bitmap.createScaledBitmap(Player_Bitmap,Player_Frame_W * Player_Frame_Count,PLayer_Frame_H,false);
 
-
+        Background = ResourcesCompat.getDrawable(Res,R.drawable.background,null);
+        Rect Dice_Draw = new Rect(Screen_Width/2,Screen_Height/2,1500+Screen_Width/2,725+Screen_Height/2);
+        Dice_1 = ResourcesCompat.getDrawable(Res,R.drawable.dice_1,null);
+        Dice_1.setBounds(Dice_Draw);
+        Dice_2 = ResourcesCompat.getDrawable(Res,R.drawable.dice_2,null);
+        Dice_2.setBounds(Dice_Draw);
+        Dice_3 = ResourcesCompat.getDrawable(Res,R.drawable.dice_3,null);
+        Dice_3.setBounds(Dice_Draw);
+        Dice_4 = ResourcesCompat.getDrawable(Res,R.drawable.dice_4,null);
+        Dice_4.setBounds(Dice_Draw);
+        Dice_5 = ResourcesCompat.getDrawable(Res,R.drawable.dice_5,null);
+        Dice_5.setBounds(Dice_Draw);
+        Dice_6 = ResourcesCompat.getDrawable(Res,R.drawable.dice_6,null);
+        Dice_6.setBounds(Dice_Draw);
 
         End_Turn_Drawable = ResourcesCompat.getDrawable(Res,R.drawable.end_turn_button,null);
         End_Turn_Drawable.setBounds(1500,725,1500+400,725+200);
@@ -133,8 +206,16 @@ public class GameView extends SurfaceView implements Runnable  {
 
         while(Playing)
         {
-            update();
-            draw();
+            if(GV_Player.Waiting_for_Dice)
+            {
+                draw();
+            }
+            else
+            {
+                update();
+                draw();
+            }
+
         }
 
     }
@@ -154,8 +235,6 @@ public class GameView extends SurfaceView implements Runnable  {
         GameThread = new Thread(this);
         GameThread.start();
     }
-
-
 
     public void manageCurrentFrame()
     {
@@ -186,15 +265,20 @@ public class GameView extends SurfaceView implements Runnable  {
         if(GV_SurfaceHolder.getSurface().isValid())
         {
             GV_Canvas = GV_SurfaceHolder.lockCanvas();
+
+
+
             if (!Grid_Setup)
             {
                 Screen_Height = getHeight();
                 Screen_Width =  getWidth();
                 Setup_Game(getHeight(),getWidth());
                 Grid_Setup=true;
+                Background.setBounds(0,0,Screen_Width,Screen_Height);
             }
             Setup_Game(getHeight(),getWidth());
             GV_Canvas.drawColor(Color.WHITE);
+            Background.draw(GV_Canvas);
             Player_DrawLocation.set(GV_Player.XPos,GV_Player.YPos,GV_Player.XPos+Player_Frame_W,GV_Player.YPos+PLayer_Frame_H);
             manageCurrentFrame();
             GV_Canvas.drawBitmap(Player_Bitmap,Player_Frame_To_Draw,Player_DrawLocation,null);
@@ -214,7 +298,7 @@ public class GameView extends SurfaceView implements Runnable  {
 
             P.setStrokeWidth(5);
 
-            P.setColor(Color.RED);
+            P.setColor(Color.BLUE);
             P.setStyle(Paint.Style.STROKE);
             for (Tile T : Grid)
             {
@@ -224,6 +308,39 @@ public class GameView extends SurfaceView implements Runnable  {
             if (GV_Turn_Handler.Display_End_Turn)
             {
                 End_Turn_Drawable.draw(GV_Canvas);
+            }
+
+            if(Display_Dice)
+            {
+                if (Frames_Displayed <= 10)
+                {
+                    switch (Number_To_Draw){
+                        case 1:
+                            Dice_1.draw(GV_Canvas);
+                        case 2:
+                            Dice_2.draw(GV_Canvas);
+                        case 3:
+                            Dice_3.draw(GV_Canvas);
+                        case 4:
+                            Dice_4.draw(GV_Canvas);
+                        case 5:
+                            Dice_5.draw(GV_Canvas);
+                        case 6:
+                            Dice_6.draw(GV_Canvas);
+                    }
+                    Frames_Displayed++;
+                    if(Number_To_Draw == 6)
+                    {
+                        Dice_Display_Finished = true;
+
+                    }
+                    else if (Frames_Displayed == 11 )
+                    {
+                        Frames_Displayed = 0;
+                        Number_To_Draw++;
+                    }
+                }
+
             }
 
             GV_SurfaceHolder.unlockCanvasAndPost(GV_Canvas);
@@ -284,4 +401,7 @@ public class GameView extends SurfaceView implements Runnable  {
         }
         return super.onTouchEvent(event);
     }
+
+
+
 }

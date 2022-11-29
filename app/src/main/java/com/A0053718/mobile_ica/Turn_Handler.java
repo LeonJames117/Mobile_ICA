@@ -16,6 +16,8 @@ public class Turn_Handler {
         boolean Start_of_Player_Turn = true;
     //Enemy Turn
         boolean Is_Enemy_Turn = false;
+    //Dice
+        boolean Waiting_For_Dice;
 
 
     Turn_Handler(Player Player, Enemy Enemy) {
@@ -45,9 +47,13 @@ public class Turn_Handler {
             Log.d("Game", "Player Turn Started");
         }
 
-        if (Player_Move_Complete)
+        if (Player_Move_Complete && !Waiting_For_Dice)
         {
             Display_End_Turn=true;
+        }
+        else
+        {
+            Display_End_Turn = false;
         }
     }
 
@@ -73,5 +79,8 @@ public class Turn_Handler {
         Is_Enemy_Turn = false;
         Log.d("Game", "Enemy Turn Ended");
     }
+
+
+
 
 }

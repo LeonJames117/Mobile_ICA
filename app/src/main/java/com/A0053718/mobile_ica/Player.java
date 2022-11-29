@@ -9,6 +9,13 @@ public class Player {
     int Current_Column = 0;
     int Health = 100;
     int Move_Range = 5;
+    boolean Waiting_for_Dice;
+    GameView Player_GV;
+    Player (GameView PGV)
+    {
+        Player_GV = PGV;
+    }
+
 
 
     public void Move_Player (int New_X, int New_Y, int New_Row, int New_Column)
@@ -18,6 +25,12 @@ public class Player {
         Current_Row = New_Row;
         Current_Column = New_Column;
     }
+
+    public void Slash_Ability()
+    {
+
+    }
+
 
 
 }
