@@ -11,7 +11,7 @@ public class Enemy {
     int YPos = 500;
     int Current_Column = 0;
     int Current_Row = 0;
-    int Movement_Range = 2;
+    int Movement_Range = 1;
     int Attack_Range = 1;
     int Attack_Power = 10;
     boolean Same_Column = false;

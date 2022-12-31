@@ -72,16 +72,20 @@ public class GameView extends SurfaceView implements Runnable  {
         Drawable Dice_6;
         public int Start_Dice_Roll()
         {
-            if (Change_in_Sense > 0.8)
+            GV_Turn_Handler.Waiting_For_Dice = true;
+            while (GV_Turn_Handler.Waiting_For_Dice)
             {
-                double Roll = Math.random()*(6-1+1)+1;
+                Display_Dice_Prompt = true;
+                if (Change_in_Sense > 0.8)
+                {
+                    Display_Dice = true;
+                    Dice_Display_Finished = false;
+                    GV_Turn_Handler.Waiting_For_Dice = false;
 
-                Display_Dice = true;
-                Dice_Display_Finished = false;
-
-                return (int)Roll;
+                }
             }
-
+            double Roll = Math.random()*(6-1+1)+1;
+            return (int)Roll;
 
         }
 
@@ -112,8 +116,12 @@ public class GameView extends SurfaceView implements Runnable  {
     Turn_Handler GV_Turn_Handler = new Turn_Handler(GV_Player,GV_Enemy);
     Drawable End_Turn_Drawable;
 
-
-
+    //Text Variables
+    boolean Display_No_Move_Enemy_Text = false;
+    int Display_No_Move_Enemy_Text_Count = 0;
+    boolean Display_Dice_Prompt = false;
+    boolean Display_Tile_Out_Of_Range_Text = false;
+    int Display_Tile_Out_Of_Range_Count = 0;
     //Sprite Variables
     boolean Is_Moving = true;
     Bitmap Player_Bitmap;
@@ -215,9 +223,7 @@ public class GameView extends SurfaceView implements Runnable  {
                 update();
                 draw();
             }
-
         }
-
     }
 
     public void Pause(){
@@ -266,8 +272,6 @@ public class GameView extends SurfaceView implements Runnable  {
         {
             GV_Canvas = GV_SurfaceHolder.lockCanvas();
 
-
-
             if (!Grid_Setup)
             {
                 Screen_Height = getHeight();
@@ -310,6 +314,34 @@ public class GameView extends SurfaceView implements Runnable  {
                 End_Turn_Drawable.draw(GV_Canvas);
             }
 
+            P.setColor(Color.RED);
+            P.setTextSize(70);
+            P.setStyle(Paint.Style.FILL);
+            if (Display_No_Move_Enemy_Text)
+            {
+                if (Display_No_Move_Enemy_Text_Count < 50)
+                {
+                    GV_Canvas.drawText("You Cannot Move onto an enemy", Screen_Width/4,150, P);
+                    Log.d("GameView", "Text Printed");
+                    Display_No_Move_Enemy_Text_Count ++;
+                }
+                else
+                {
+                    Display_No_Move_Enemy_Text = false;
+                    Display_No_Move_Enemy_Text_Count = 0;
+                }
+
+            }
+            if (Display_Tile_Out_Of_Range_Text) {
+                if (Display_Tile_Out_Of_Range_Count < 50) {
+                    GV_Canvas.drawText("Tile Out Of Range", Screen_Width / 3, 150, P);
+                    Log.d("GameView", "Text Printed");
+                    Display_Tile_Out_Of_Range_Count++;
+                } else {
+                    Display_Tile_Out_Of_Range_Text = false;
+                    Display_Tile_Out_Of_Range_Count = 0;
+                }
+            }
             if(Display_Dice)
             {
                 if (Frames_Displayed <= 10)
@@ -332,13 +364,15 @@ public class GameView extends SurfaceView implements Runnable  {
                     if(Number_To_Draw == 6)
                     {
                         Dice_Display_Finished = true;
-
                     }
                     else if (Frames_Displayed == 11 )
                     {
                         Frames_Displayed = 0;
                         Number_To_Draw++;
                     }
+
+
+
                 }
 
             }
@@ -371,6 +405,7 @@ public class GameView extends SurfaceView implements Runnable  {
                 int Touch_Row = Touch_Y / Tile_Height;
                 if (Touch_Column == GV_Enemy.Current_Column && Touch_Row == GV_Enemy.Current_Row)
                 {
+                    Display_No_Move_Enemy_Text = true;
                     Log.d("GameView", "You cannot move onto an enemy");
                     return true;
                 }
@@ -381,6 +416,8 @@ public class GameView extends SurfaceView implements Runnable  {
                     Log.d("GameView", "Touch Column: " + Touch_Column);
                     Log.d("GameView", "Touch Row: " + Touch_Row);
                     Log.d("GameView", "Tile out of Range");
+                    Display_Tile_Out_Of_Range_Text = true;
+
                     return true;
                 }
 

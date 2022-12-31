@@ -8,7 +8,7 @@ public class Player {
     int Current_Row = 0;
     int Current_Column = 0;
     int Health = 100;
-    int Move_Range = 5;
+    int Move_Range = 3;
     boolean Waiting_for_Dice;
     GameView Player_GV;
     Player (GameView PGV)
@@ -28,7 +28,7 @@ public class Player {
 
     public void Slash_Ability()
     {
-
+        Player_GV.Start_Dice_Roll();
     }
 
 
