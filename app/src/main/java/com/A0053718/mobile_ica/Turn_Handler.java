@@ -14,6 +14,7 @@ public class Turn_Handler {
         boolean Player_Move_Allowed = true;
         boolean Display_End_Turn = false;
         boolean Start_of_Player_Turn = true;
+        boolean Display_Ability_Icons = false;
     //Enemy Turn
         boolean Is_Enemy_Turn = false;
     //Dice
@@ -49,6 +50,7 @@ public class Turn_Handler {
 
         if (Player_Move_Complete && !Waiting_For_Dice)
         {
+            Display_Ability_Icons = true;
             Display_End_Turn=true;
         }
         else

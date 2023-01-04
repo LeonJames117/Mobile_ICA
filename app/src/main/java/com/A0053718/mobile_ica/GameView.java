@@ -50,7 +50,15 @@ public class GameView extends SurfaceView implements Runnable  {
             Change_in_Sense = Sense_X - Previous_Sense_X;
             Sense_Z = sensorEvent.values[2];
             Previous_Sense_X = Sense_X;
+            //Log.d("GameView", "Change in sense: " + Change_in_Sense);
+            if (GV_Turn_Handler.Waiting_For_Dice && Change_in_Sense >= 2)
+            {
+                Log.d("GameView", "Change in Sense: " + Change_in_Sense);
+                Display_Dice = true;
+                Dice_Display_Finished = false;
+                Log.d("GameView", "Dice Rolled ");
 
+            }
         }
 
         @Override
@@ -70,23 +78,15 @@ public class GameView extends SurfaceView implements Runnable  {
         Drawable Dice_4;
         Drawable Dice_5;
         Drawable Dice_6;
+        int Latest_Roll;
         public int Start_Dice_Roll()
         {
             GV_Turn_Handler.Waiting_For_Dice = true;
-            while (GV_Turn_Handler.Waiting_For_Dice)
-            {
-                Display_Dice_Prompt = true;
-                if (Change_in_Sense > 0.8)
-                {
-                    Display_Dice = true;
-                    Dice_Display_Finished = false;
-                    GV_Turn_Handler.Waiting_For_Dice = false;
-
-                }
-            }
+            Display_Dice_Prompt = true;
             double Roll = Math.random()*(6-1+1)+1;
+            Latest_Roll = (int)Roll;
+            Log.d("GameView", "Dice_Roll: " + (int)Roll);
             return (int)Roll;
-
         }
 
 
@@ -107,7 +107,7 @@ public class GameView extends SurfaceView implements Runnable  {
     boolean Grid_Setup = false;
 
     //Entities
-    Player GV_Player = new Player(this);
+    Player GV_Player = new Player(this, Grid_Helper);
     Enemy GV_Enemy = new Enemy(Grid,Grid_Helper);
 
 
@@ -120,8 +120,11 @@ public class GameView extends SurfaceView implements Runnable  {
     boolean Display_No_Move_Enemy_Text = false;
     int Display_No_Move_Enemy_Text_Count = 0;
     boolean Display_Dice_Prompt = false;
+    int Dice_Prompt_Count = 0;
     boolean Display_Tile_Out_Of_Range_Text = false;
     int Display_Tile_Out_Of_Range_Count = 0;
+    int Enemy_Not_In_Range_Count = 0;
+
     //Sprite Variables
     boolean Is_Moving = true;
     Bitmap Player_Bitmap;
@@ -138,6 +141,8 @@ public class GameView extends SurfaceView implements Runnable  {
         //Enemy
             Drawable Enemy_Face_Left_Drawable;
             Drawable Enemy_Face_Right_Drawable;
+        //Icons
+            Drawable Sword_Drawable;
 
     public GameView(Context context) {
         super(context);
@@ -159,7 +164,7 @@ public class GameView extends SurfaceView implements Runnable  {
         Player_Bitmap = Bitmap.createScaledBitmap(Player_Bitmap,Player_Frame_W * Player_Frame_Count,PLayer_Frame_H,false);
 
         Background = ResourcesCompat.getDrawable(Res,R.drawable.background,null);
-        Rect Dice_Draw = new Rect(Screen_Width/2,Screen_Height/2,1500+Screen_Width/2,725+Screen_Height/2);
+        Rect Dice_Draw = new Rect(800,500,700+400,500+200);
         Dice_1 = ResourcesCompat.getDrawable(Res,R.drawable.dice_1,null);
         Dice_1.setBounds(Dice_Draw);
         Dice_2 = ResourcesCompat.getDrawable(Res,R.drawable.dice_2,null);
@@ -182,6 +187,8 @@ public class GameView extends SurfaceView implements Runnable  {
         Enemy_Face_Right_Drawable.setBounds(GV_Enemy.XPos,GV_Enemy.YPos,GV_Enemy.XPos+150,GV_Enemy.YPos+150);
         lastFrameChangeTime = 0;
 
+        Sword_Drawable = ResourcesCompat.getDrawable(Res,R.drawable.sword_icon,null);
+        Sword_Drawable.setBounds(600,730,820,725+225);
     }
 
     public void Setup_Game(int Screen_H, int Screen_W)
@@ -322,7 +329,7 @@ public class GameView extends SurfaceView implements Runnable  {
                 if (Display_No_Move_Enemy_Text_Count < 50)
                 {
                     GV_Canvas.drawText("You Cannot Move onto an enemy", Screen_Width/4,150, P);
-                    Log.d("GameView", "Text Printed");
+                    //Log.d("GameView", "Text Printed");
                     Display_No_Move_Enemy_Text_Count ++;
                 }
                 else
@@ -335,16 +342,39 @@ public class GameView extends SurfaceView implements Runnable  {
             if (Display_Tile_Out_Of_Range_Text) {
                 if (Display_Tile_Out_Of_Range_Count < 50) {
                     GV_Canvas.drawText("Tile Out Of Range", Screen_Width / 3, 150, P);
-                    Log.d("GameView", "Text Printed");
+                    //Log.d("GameView", "Text Printed");
                     Display_Tile_Out_Of_Range_Count++;
                 } else {
                     Display_Tile_Out_Of_Range_Text = false;
                     Display_Tile_Out_Of_Range_Count = 0;
                 }
             }
+            if (Display_Dice_Prompt) {
+                    GV_Canvas.drawText("Please Roll Dice", Screen_Width / 3, 150, P);
+            }
+            if (GV_Player.Enemy_Not_In_Range_Text)
+            {
+                if (Enemy_Not_In_Range_Count < 50)
+                {
+                    GV_Canvas.drawText("Enemy is not in range", Screen_Width/4,150, P);
+                    //Log.d("GameView", "Text Printed");
+                    Enemy_Not_In_Range_Count ++;
+                }
+                else
+                {
+                    GV_Player.Enemy_Not_In_Range_Text = false;
+                    Enemy_Not_In_Range_Count = 0;
+                }
+            }
+
+            if (GV_Turn_Handler.Display_Ability_Icons)
+            {
+                Sword_Drawable.draw(GV_Canvas);
+            }
+
             if(Display_Dice)
             {
-                if (Frames_Displayed <= 10)
+                if (Frames_Displayed <= 15)
                 {
                     switch (Number_To_Draw){
                         case 1:
@@ -364,14 +394,28 @@ public class GameView extends SurfaceView implements Runnable  {
                     if(Number_To_Draw == 6)
                     {
                         Dice_Display_Finished = true;
+                        switch (Latest_Roll){
+                            case 1:
+                                Dice_1.draw(GV_Canvas);
+                            case 2:
+                                Dice_2.draw(GV_Canvas);
+                            case 3:
+                                Dice_3.draw(GV_Canvas);
+                            case 4:
+                                Dice_4.draw(GV_Canvas);
+                            case 5:
+                                Dice_5.draw(GV_Canvas);
+                            case 6:
+                                Dice_6.draw(GV_Canvas);
+
+                        }
+                        GV_Turn_Handler.Waiting_For_Dice = false;
                     }
-                    else if (Frames_Displayed == 11 )
+                    else if (Frames_Displayed == 16 )
                     {
                         Frames_Displayed = 0;
                         Number_To_Draw++;
                     }
-
-
 
                 }
 
@@ -398,7 +442,11 @@ public class GameView extends SurfaceView implements Runnable  {
                 GV_Turn_Handler.End_Player_Turn();
                 return true;
             }
-
+            if(GV_Turn_Handler.Display_Ability_Icons && Sword_Drawable.getBounds().contains(Touch_X,Touch_Y))
+            {
+                GV_Player.Slash_Ability();
+                return true;
+            }
             if (GV_Turn_Handler.Player_Move_Allowed)
             {
                 int Touch_Column = Touch_X / Tile_Width;
