@@ -10,15 +10,17 @@ public class Turn_Handler {
         Enemy TH_Enemy;
     //Player Turn
         boolean Is_Player_Turn = true;
+        boolean Display_Skip_Movement = false;
         boolean Player_Move_Complete = false;
         boolean Player_Move_Allowed = true;
+        boolean Player_Ability_Used = false;
         boolean Display_End_Turn = false;
         boolean Start_of_Player_Turn = true;
         boolean Display_Ability_Icons = false;
     //Enemy Turn
         boolean Is_Enemy_Turn = false;
     //Dice
-        boolean Waiting_For_Dice;
+        boolean Waiting_For_Dice = false;
 
 
     Turn_Handler(Player Player, Enemy Enemy) {
@@ -43,14 +45,19 @@ public class Turn_Handler {
         if (Start_of_Player_Turn)
         {
             Player_Move_Allowed = true;
+            Display_Skip_Movement = true;
             Player_Move_Complete = false;
+            Player_Ability_Used = false;
             Start_of_Player_Turn = false;
             Log.d("Game", "Player Turn Started");
         }
 
         if (Player_Move_Complete && !Waiting_For_Dice)
         {
-            Display_Ability_Icons = true;
+            if (!Player_Ability_Used)
+            {
+                Display_Ability_Icons = true;
+            }
             Display_End_Turn=true;
         }
         else
@@ -63,7 +70,9 @@ public class Turn_Handler {
     {
         Is_Player_Turn = false;
         Is_Enemy_Turn = true;
-        Display_End_Turn=false;
+        Display_End_Turn = false;
+        Display_Ability_Icons = false;
+
         Log.d("Game", "Player Turn Ended");
     }
 

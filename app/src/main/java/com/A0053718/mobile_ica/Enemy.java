@@ -122,11 +122,11 @@ public class Enemy {
 
     public void Enemy_Attack(Player Target)
     {
-        if(!Enemy_Grid_Help.Tile_In_Range(Target.Current_Row, Target.Current_Column, Current_Column,Current_Row,Attack_Range))
+        if(Enemy_Grid_Help.Enemy_Tile_In_Range(Target.Current_Row, Target.Current_Column, Current_Column,Current_Row,Attack_Range,Facing_Right))
         {
             Target.Health = Target.Health-Attack_Power;
-            Log.d("Game", "Enemy Attacked");
-            Log.d("Game", "Player Health: " + Target.Health);
+            Log.d("GameView", "Enemy Attacked");
+            Log.d("GameView", "Player Health: " + Target.Health);
         }
     }
 

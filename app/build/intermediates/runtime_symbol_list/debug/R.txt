@@ -2512,6 +2512,7 @@ int drawable notify_panel_notification_icon_bg 0x7f0700a0
 int drawable player_idle 0x7f0700a1
 int drawable skeleton 0x7f0700a2
 int drawable skeleton_face_left 0x7f0700a3
+int drawable skip_movement_button 0x7f0700a9
 int drawable sword_icon 0x7f0700a4
 int drawable test_custom_background 0x7f0700a5
 int drawable test_level_drawable 0x7f0700a6

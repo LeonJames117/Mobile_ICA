@@ -2513,6 +2513,8 @@ drawable notify_panel_notification_icon_bg
 drawable player_idle
 drawable skeleton
 drawable skeleton_face_left
+drawable skip_movement_button
+drawable sword_icon
 drawable test_custom_background
 drawable test_level_drawable
 drawable tooltip_frame_dark
