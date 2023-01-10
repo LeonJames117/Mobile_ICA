@@ -7,13 +7,13 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/Options_Button"
+        android:id="@+id/Instructions_Button"
         android:layout_width="226dp"
         android:layout_height="61dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@android:color/holo_red_dark"
         android:onClick="Launch_Options_Menu"
-        android:text="Options"
+        android:text="Instructions"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Game_Name"
+        android:text="Desert Duel"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,5 +42,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Game_Name" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

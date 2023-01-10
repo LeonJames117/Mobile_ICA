@@ -1,9 +1,5 @@
 [
     {
-        "merged": "com.A0053718.mobile_ica.app-merged_res-25:/drawable-v24_skip_movement_button.png.flat",
-        "source": "com.A0053718.mobile_ica.app-main-27:/drawable-v24/skip_movement_button.png"
-    },
-    {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_run_guy.PNG.flat",
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\run_guy.PNG"
     },
@@ -22,6 +18,10 @@
     {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\layout_activity_game.xml.flat",
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\layout\\activity_game.xml"
+    },
+    {
+        "merged": "com.A0053718.mobile_ica.app-merged_res-25:/layout_activity_instructions_menu.xml.flat",
+        "source": "com.A0053718.mobile_ica.app-main-27:/layout/activity_instructions_menu.xml"
     },
     {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\layout_activity_main.xml.flat",
@@ -92,12 +92,24 @@
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable\\dice_6.png"
     },
     {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_heal_icon.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\heal_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_skip_movement_button.png.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\skip_movement_button.png"
+    },
+    {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\mipmap-xxxhdpi\\ic_launcher.webp"
     },
     {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable-v24_end_turn_button.png.flat",
         "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\drawable-v24\\end_turn_button.png"
+    },
+    {
+        "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\layout_activity_instructions_menu.xml.flat",
+        "source": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-main-27:\\layout\\activity_instructions_menu.xml"
     },
     {
         "merged": "C:\\Users\\r4ndo\\.gradle\\daemon\\7.4\\com.A0053718.mobile_ica.app-merged_res-25:\\drawable_dice_4.png.flat",

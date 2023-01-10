@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Start_Button = findViewById(R.id.Start_Game_Button);
-        Options_Button = findViewById(R.id.Options_Button);
+        Options_Button = findViewById(R.id.Instructions_Button);
 
     }
 

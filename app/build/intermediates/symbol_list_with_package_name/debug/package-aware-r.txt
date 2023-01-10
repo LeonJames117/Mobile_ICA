@@ -2458,6 +2458,7 @@ drawable dice_4
 drawable dice_5
 drawable dice_6
 drawable end_turn_button
+drawable heal_icon
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
 drawable ic_launcher_background
@@ -2525,11 +2526,11 @@ id BOTTOM_START
 id CTRL
 id FUNCTION
 id Game_Name
+id Instructions_Button
+id Instructions_Title
 id META
 id NO_DEBUG
 id Option_Back_To_MM
-id Options_Button
-id Options_Title
 id SHIFT
 id SHOW_ALL
 id SHOW_PATH
@@ -2738,6 +2739,7 @@ id ifRoom
 id ignore
 id ignoreRequest
 id image
+id imageView
 id immediateStop
 id included
 id info
@@ -2954,6 +2956,12 @@ id textSpacerNoTitle
 id textStart
 id textTop
 id textView
+id textView2
+id textView3
+id textView4
+id textView5
+id textView6
+id textView7
 id text_input_end_icon
 id text_input_error_icon
 id text_input_start_icon
@@ -3087,8 +3095,8 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_game
+layout activity_instructions_menu
 layout activity_main
-layout activity_options_menu
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog

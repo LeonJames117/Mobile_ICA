@@ -18,7 +18,10 @@ public class Player {
     //Combat
         int Health = 100;
         int Slash_Range = 1;
-        int Slash_Success_Role = 3;
+        int Slash_Success_Roll = 3;
+        int Slash_Damage = 10;
+        int Heal_Successful_Roll = 4;
+        int Heal_Amount = 20;
         boolean Display_Enemy_Not_In_Range_Text;
 
     //Constructor
@@ -29,10 +32,6 @@ public class Player {
 
     }
 
-    void Setup_Player()
-    {
-
-    }
     //Moves player sprite to a given location on the screen and updates grid position
     public void Move_Player (int New_X, int New_Y, int New_Row, int New_Column)
     {
@@ -57,12 +56,28 @@ public class Player {
 
     }
 
-    public void Slash_Resolution(int Dice_Roll, Enemy Enemy)
+    public void Heal_Ability()
     {
-        if(Dice_Roll >= Slash_Success_Role)
+        Player_GV.Start_Dice_Roll("Heal");
+    }
+    public void Heal_Resolution(int Dice_Roll)
+    {
+        if(Dice_Roll >= Heal_Successful_Roll)
         {
             Player_GV.Display_Dice_Success = true;
-            Enemy.Health = Enemy.Health -10;
+            Health = Health + Heal_Amount;
+        }
+        else
+        {
+            Player_GV.Display_Dice_Fail = true;
+        }
+    }
+    public void Slash_Resolution(int Dice_Roll, Enemy Enemy)
+    {
+        if(Dice_Roll >= Slash_Success_Roll)
+        {
+            Player_GV.Display_Dice_Success = true;
+            Enemy.Health = Enemy.Health - Slash_Damage;
 
         }
         else
